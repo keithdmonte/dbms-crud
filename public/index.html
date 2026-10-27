@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hospital Management System</title>
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <h1>🏥 Hospital Management System</h1>
+    <p>Full-stack CRUD demo · Express + PostgreSQL</p>
+  </header>
+
+  <nav class="tabs">
+    <button class="tab active" data-tab="dashboard">Dashboard</button>
+    <button class="tab" data-tab="patients">Patients</button>
+    <button class="tab" data-tab="doctors">Doctors</button>
+    <button class="tab" data-tab="appointments">Appointments</button>
+    <button class="tab" data-tab="reports">Reports</button>
+  </nav>
+
+  <!-- DASHBOARD -->
+  <section id="dashboard" class="panel active">
+    <h2>Dashboard</h2>
+    <div class="stats" id="stats"></div>
+    <div class="grid-2">
+      <div>
+        <h3>Appointments by status</h3>
+        <table id="status-table">
+          <thead><tr><th>Status</th><th>Count</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <div>
+        <h3>Upcoming appointments</h3>
+        <table id="upcoming-table">
+          <thead><tr><th>Date</th><th>Patient</th><th>Doctor</th><th>Reason</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- PATIENTS -->
+  <section id="patients" class="panel">
+    <h2>Patients</h2>
+    <form id="patient-form" class="crud-form">
+      <input type="hidden" name="id" />
+      <input name="name" placeholder="Name *" required />
+      <input name="age" type="number" placeholder="Age" min="0" />
+      <select name="gender">
+        <option value="">Gender</option>
+        <option>Male</option>
+        <option>Female</option>
+        <option>Other</option>
+      </select>
+      <input name="phone" placeholder="Phone" />
+      <input name="address" placeholder="Address" />
+      <div class="form-actions">
+        <button type="submit" class="btn-primary">Save</button>
+        <button type="button" class="btn-reset" data-reset>Clear</button>
+      </div>
+    </form>
+    <input type="search" class="search" data-search="patients" placeholder="Search patients by name, phone or address…" />
+    <table id="patients-table">
+      <thead>
+        <tr><th>ID</th><th>Name</th><th>Age</th><th>Gender</th><th>Phone</th><th>Address</th><th>Actions</th></tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </section>
+
+  <!-- DOCTORS -->
+  <section id="doctors" class="panel">
+    <h2>Doctors</h2>
+    <form id="doctor-form" class="crud-form">
+      <input type="hidden" name="id" />
+      <input name="name" placeholder="Name *" required />
+      <input name="specialty" placeholder="Specialty" />
+      <input name="phone" placeholder="Phone" />
+      <input name="consultation_fee" type="number" min="0" step="0.01" placeholder="Fee (₹)" />
+      <div class="form-actions">
+        <button type="submit" class="btn-primary">Save</button>
+        <button type="button" class="btn-reset" data-reset>Clear</button>
+      </div>
+    </form>
+    <input type="search" class="search" data-search="doctors" placeholder="Search doctors by name or specialty…" />
+    <table id="doctors-table">
+      <thead>
+        <tr><th>ID</th><th>Name</th><th>Specialty</th><th>Phone</th><th>Fee (₹)</th><th>Actions</th></tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </section>
+
+  <!-- APPOINTMENTS -->
+  <section id="appointments" class="panel">
+    <h2>Appointments</h2>
+    <form id="appointment-form" class="crud-form">
+      <input type="hidden" name="id" />
+      <select name="patient_id" required>
+        <option value="">Patient *</option>
+      </select>
+      <select name="doctor_id" required>
+        <option value="">Doctor *</option>
+      </select>
+      <input name="appt_date" type="date" required />
+      <input name="reason" placeholder="Reason" />
+      <select name="status">
+        <option value="scheduled">scheduled</option>
+        <option value="completed">completed</option>
+        <option value="cancelled">cancelled</option>
+      </select>
+      <div class="form-actions">
+        <button type="submit" class="btn-primary">Save</button>
+        <button type="button" class="btn-reset" data-reset>Clear</button>
+      </div>
+    </form>
+    <input type="search" class="search" data-search="appointments" placeholder="Search by patient, doctor, reason or status…" />
+    <table id="appointments-table">
+      <thead>
+        <tr><th>ID</th><th>Patient</th><th>Doctor</th><th>Date</th><th>Reason</th><th>Status</th><th>Actions</th></tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </section>
+
+  <!-- REPORTS -->
+  <section id="reports" class="panel">
+    <h2>Reports</h2>
+
+    <h3>Doctor workload &amp; revenue</h3>
+    <div class="report-controls">
+      <label>Min. appointments
+        <input type="number" id="workload-min" min="0" value="0" />
+      </label>
+    </div>
+    <table id="workload-table">
+      <thead>
+        <tr><th>Doctor</th><th>Specialty</th><th>Fee (₹)</th><th>Total</th><th>Completed</th><th>Scheduled</th><th>Cancelled</th><th>Revenue (₹)</th></tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+
+    <div class="grid-2">
+      <div>
+        <h3>Patients without appointments</h3>
+        <table id="inactive-table">
+          <thead><tr><th>Name</th><th>Age</th><th>Phone</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <div>
+        <h3>Patients older than average age <span id="avg-age" class="muted"></span></h3>
+        <table id="above-avg-table">
+          <thead><tr><th>Name</th><th>Age</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <div id="toast"></div>
+  <script src="app.js"></script>
+</body>
+</html>
